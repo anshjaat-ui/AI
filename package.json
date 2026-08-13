@@ -1,0 +1,11 @@
+{
+  "name": "nolimit-coder-ai",
+  "version": "0.1.0",
+  "private": true,
+  "description": "A free, local-first coding AI workspace powered by user-run Ollama models.",
+  "type": "module",
+  "scripts": {
+    "start": "python3 -m http.server 5173",
+    "check": "node --check src/app.js"
+  }
+}

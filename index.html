@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="A free, local-first coding AI workspace powered by user-run Ollama models." />
+    <title>NoLimit Coder AI</title>
+    <link rel="stylesheet" href="src/styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <section class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">✨ local-first coding assistant</p>
+          <h1>NoLimit Coder AI</h1>
+          <p>
+            A free coding workspace inspired by tools like Cursor, Claude, Windsurf, and Antigravity — but designed to run on your own machine with no app credits.
+          </p>
+          <div class="quickstart">
+            <span aria-hidden="true">▸</span>
+            <code>ollama pull codellama:7b && ollama serve</code>
+          </div>
+        </div>
+        <aside class="setup-card" aria-label="Model settings">
+          <label>
+            Ollama endpoint
+            <input id="endpoint" value="http://localhost:11434" />
+          </label>
+          <label>
+            Coding model
+            <input id="model" value="codellama:7b" />
+          </label>
+          <label>
+            System instruction
+            <textarea id="systemPrompt" rows="7"></textarea>
+          </label>
+        </aside>
+      </section>
+
+      <section class="features" aria-label="Highlights">
+        <article>
+          <span class="feature-icon">∞</span>
+          <h2>No app credits</h2>
+          <p>Usage runs through your own local model server, so the app does not meter prompts or tokens.</p>
+        </article>
+        <article>
+          <span class="feature-icon">{ }</span>
+          <h2>Coding-only workflow</h2>
+          <p>The prompt, examples, and interface are tuned for programming, debugging, reviewing, and shipping code.</p>
+        </article>
+        <article>
+          <span class="feature-icon">✓</span>
+          <h2>Local-first privacy</h2>
+          <p>Requests are sent to your configured Ollama endpoint instead of a paid cloud API by default.</p>
+        </article>
+      </section>
+
+      <section class="workspace" aria-label="Coding chat workspace">
+        <div class="chat-header">
+          <div>
+            <p class="eyebrow">🤖 pair programmer</p>
+            <h2>Ask for code, fixes, tests, or architecture</h2>
+          </div>
+          <span id="status" class="status">Ready</span>
+        </div>
+
+        <div id="messages" class="messages" aria-live="polite"></div>
+
+        <form id="composer" class="composer">
+          <textarea id="prompt" aria-label="Coding request" placeholder="Describe the coding task you want solved..." rows="4"></textarea>
+          <button id="sendButton" type="submit">
+            <span aria-hidden="true">▶</span> Send
+          </button>
+        </form>
+      </section>
+    </main>
+    <script type="module" src="src/app.js"></script>
+  </body>
+</html>
