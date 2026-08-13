@@ -21,13 +21,12 @@ The app does **not** include a paid hosted model or credit system. Instead, it c
 ## Quick start
 
 ```bash
-npm install
 ollama pull codellama:7b
 ollama serve
 npm run start
 ```
 
-Open http://localhost:5173 and send a coding request.
+Open http://localhost:5173 and send a coding request. The app is intentionally dependency-free, so `npm install` is not required for the current prototype.
 
 ## Browser CORS note
 
@@ -40,3 +39,12 @@ OLLAMA_ORIGINS=http://localhost:5173 ollama serve
 ## Why local models?
 
 Commercial APIs cost money per token, so a truly free app cannot honestly promise unlimited use against those APIs. NoLimit Coder AI avoids app credits by letting users bring their own local compute.
+
+
+## Files added to this repo
+
+- `index.html` — app shell and coding assistant UI
+- `src/app.js` — chat state, Ollama request handling, and safe message rendering
+- `src/styles.css` — responsive dark interface styling
+- `docs/PROJECT_STRUCTURE.md` — repository layout and next-step guidance
+- `.gitignore` — common local, dependency, cache, and editor exclusions
