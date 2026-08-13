@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="A secure, browser-based coding AI workspace deployable to Vercel." />
+    <title>NoLimit Coder AI</title>
+    <link rel="stylesheet" href="src/styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <section class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">✨ browser coding assistant</p>
+          <h1>NoLimit Coder AI</h1>
+          <p>
+            A polished web coding assistant for code generation, debugging, refactoring, explanations, tests, and architecture — deployable on Vercel with secrets kept server-side.
+          </p>
+          <div class="quickstart">
+            <span aria-hidden="true">▸</span>
+            <code>npm install && npm run dev</code>
+          </div>
+        </div>
+        <aside class="setup-card" aria-label="AI configuration summary">
+          <p class="eyebrow">🔐 secure backend</p>
+          <h2>Server-side AI route</h2>
+          <p>
+            The browser only calls <code>/api/chat</code>. Provider API keys stay in Vercel environment variables and are never shipped to client JavaScript.
+          </p>
+          <dl class="config-list">
+            <div>
+              <dt>Provider</dt>
+              <dd id="providerName">Configured on server</dd>
+            </div>
+            <div>
+              <dt>Model</dt>
+              <dd id="modelName">Configured on server</dd>
+            </div>
+          </dl>
+        </aside>
+      </section>
+
+      <section class="features" aria-label="Highlights">
+        <article>
+          <span class="feature-icon">⌘</span>
+          <h2>Coding specialist</h2>
+          <p>Focused on complete files, bug analysis, refactoring, optimization, tests, and practical engineering decisions.</p>
+        </article>
+        <article>
+          <span class="feature-icon">{ }</span>
+          <h2>Provider-ready</h2>
+          <p>The frontend talks to one API route while the backend provider layer can grow to support more models.</p>
+        </article>
+        <article>
+          <span class="feature-icon">✓</span>
+          <h2>Production-minded</h2>
+          <p>Includes server-side key handling, validation, request limits, safe errors, retry, and clear conversation controls.</p>
+        </article>
+      </section>
+
+      <section class="workspace" aria-label="Coding chat workspace">
+        <div class="chat-header">
+          <div>
+            <p class="eyebrow">🤖 pair programmer</p>
+            <h2>Ask for code, fixes, tests, or architecture</h2>
+          </div>
+          <div class="actions">
+            <button id="clearButton" class="secondary" type="button">Clear</button>
+            <span id="status" class="status">Ready</span>
+          </div>
+        </div>
+
+        <div id="messages" class="messages" aria-live="polite"></div>
+
+        <form id="composer" class="composer">
+          <textarea id="prompt" aria-label="Coding request" placeholder="Describe the coding task you want solved... Enter sends, Shift+Enter adds a newline." rows="4"></textarea>
+          <button id="sendButton" type="submit">
+            <span aria-hidden="true">▶</span> Send
+          </button>
+        </form>
+      </section>
+    </main>
+    <script type="module" src="src/app.js"></script>
+  </body>
+</html>

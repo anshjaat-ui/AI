@@ -1,0 +1,13 @@
+{
+  "name": "nolimit-coder-ai",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A Vercel-hosted browser coding AI with secure server-side provider calls.",
+  "type": "module",
+  "scripts": {
+    "dev": "npx vercel dev",
+    "start": "npm run dev",
+    "build": "node scripts/verify.js",
+    "check": "node --check src/app.js && node --check api/chat.js && node --check lib/ai/provider.js && node --check lib/ai/openai.js && node --check lib/ai/anthropic.js && node --check scripts/verify.js"
+  }
+}
