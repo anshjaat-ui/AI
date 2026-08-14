@@ -1,5 +1,7 @@
 {
   "name": "nolimit-coder-ai",
+{
+  "name": "nolimit-coder-ai",
   "version": "2.0.0",
   "private": true,
   "description": "A Vercel-hosted browser-local coding AI powered by WebGPU and WebLLM.",
@@ -9,5 +11,7 @@
     "start": "npm run dev",
     "build": "node scripts/verify.js",
     "check": "node --check src/app.js && node --check src/local-webllm.js && node --check scripts/dev-server.js && node --check scripts/verify.js"
+  }
+}
   }
 }
