@@ -6,8 +6,12 @@ yarn-error.log*
 pnpm-debug.log*
 
 # Local environment and secrets
+# Local environment and secrets
+# Keep developer machine secrets out of Git, but allow checked-in templates.
 .env
 .env.*
+.env.local
+!.env.example
 !.env.example
 
 # Build and cache output
