@@ -1,41 +1,37 @@
 # Project Structure
 
-This repository contains a Vercel-compatible browser coding AI named **NoLimit Coder AI**.
+This repository contains a Vercel-hosted frontend for **NoLimit Coder AI**, a browser-local coding assistant powered by WebGPU and WebLLM.
 
 ```text
 .
-├── api/
-│   └── chat.js             # Secure Vercel serverless endpoint for AI chat
 ├── docs/
 │   └── PROJECT_STRUCTURE.md
-├── lib/
-│   └── ai/
-│       ├── anthropic.js    # Anthropic provider implementation
-│       ├── openai.js       # OpenAI provider implementation
-│       └── provider.js     # Provider selection and coding system prompt
 ├── scripts/
-│   └── verify.js           # Build-time repository checks
+│   ├── dev-server.js       # Node static dev server with browser-ML headers
+│   └── verify.js           # Syntax and cleanup verification
 ├── src/
-│   ├── app.js              # Browser chat UI logic
-│   └── styles.css          # Responsive visual design
-├── .env.example            # Placeholder environment variables only
+│   ├── app.js              # Chat UI, model controls, streaming, copy/retry/clear
+│   ├── local-webllm.js     # WebGPU checks, model list, WebLLM loading, generation
+│   ├── styles.css          # Responsive NoLimit Coder visual design
+│   └── webllm-worker.js    # WebLLM worker bridge for non-blocking inference
 ├── .gitignore
-├── index.html              # Main app markup
-├── package.json            # Development, build, and check scripts
-└── vercel.json             # Vercel configuration and headers
+├── index.html              # Static application shell
+├── package.json            # Local dev and verification scripts
+├── package-lock.json
+└── vercel.json             # Static hosting and cross-origin isolation headers
 ```
 
-## Request flow
+## Runtime flow
 
-1. The browser renders the static UI from `index.html`, `src/app.js`, and `src/styles.css`.
-2. The browser sends conversation messages to `/api/chat`.
-3. The Vercel function validates input and applies the server-side coding system prompt.
-4. The provider abstraction calls the configured AI provider using server-side environment variables.
-5. The browser renders the assistant response, including copyable code blocks.
+1. The user opens the static site.
+2. `src/app.js` checks WebGPU support through `src/local-webllm.js`.
+3. The user selects a supported model and explicitly starts the download/load process.
+4. WebLLM downloads model artifacts and caches them where supported by the browser.
+5. Chat messages stream through the loaded local model inside the browser.
 
 ## Extension points
 
-- Add providers in `lib/ai/` and register them in `lib/ai/provider.js`.
-- Add authentication or rate limiting before production public launch.
-- Add streaming responses by extending `/api/chat` and the client renderer.
-- Add project-file context later with a separate authenticated upload/indexing workflow.
+- Add smaller or larger WebLLM-supported models to `LOCAL_MODELS` in `src/local-webllm.js`.
+- Add richer markdown parsing or a dedicated syntax highlighter if a bundled build step is introduced.
+- Add a service worker only after confirming cache strategy and model artifact behavior for target browsers.
+- Add import/export chat history without sending prompts off-device.

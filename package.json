@@ -1,13 +1,13 @@
 {
   "name": "nolimit-coder-ai",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "private": true,
-  "description": "A Vercel-hosted browser coding AI with secure server-side provider calls.",
+  "description": "A Vercel-hosted browser-local coding AI powered by WebGPU and WebLLM.",
   "type": "module",
   "scripts": {
-    "dev": "npx vercel dev",
+    "dev": "node scripts/dev-server.js",
     "start": "npm run dev",
     "build": "node scripts/verify.js",
-    "check": "node --check src/app.js && node --check api/chat.js && node --check lib/ai/provider.js && node --check lib/ai/openai.js && node --check lib/ai/anthropic.js && node --check scripts/verify.js"
+    "check": "node --check src/app.js && node --check src/local-webllm.js && node --check scripts/dev-server.js && node --check scripts/verify.js"
   }
 }

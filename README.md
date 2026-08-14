@@ -1,71 +1,82 @@
 # NoLimit Coder AI
 
-NoLimit Coder AI is a secure, browser-based coding assistant UI that can be deployed to Vercel. It helps with coding questions, code generation, debugging, explaining code, refactoring, optimization suggestions, tests, and complete-file drafting.
+NoLimit Coder AI is a Vercel-hosted, browser-local coding assistant. Vercel serves the static website, while AI inference runs in the user's browser through WebGPU/WebAssembly and a locally cached WebLLM model.
 
-The browser never receives an AI provider API key. The frontend calls the server-side `/api/chat` route, and the Vercel function calls the configured provider using private environment variables.
+No API credits are required because normal chat inference runs on the user's device. Performance is not unlimited: practical speed, memory capacity, and model size depend on the user's browser, GPU, available memory, storage, and selected model.
 
 ## Architecture
 
 ```text
-Browser UI → /api/chat → provider abstraction → AI provider
+Browser UI → WebGPU/WebAssembly → locally cached WebLLM model → coding assistant
 ```
 
-- `index.html` keeps the polished coding-AI interface.
-- `src/app.js` manages multi-turn chat, retry, clear conversation, Enter-to-send, Shift+Enter newlines, and copyable code blocks.
-- `api/chat.js` validates requests, limits payload size, applies safe errors, and calls the provider layer.
-- `lib/ai/provider.js` selects the configured provider and owns the coding-focused system prompt.
-- `lib/ai/openai.js` and `lib/ai/anthropic.js` contain provider-specific API calls.
+There is no server-side model call in the normal chat path. The browser loads WebLLM, downloads the selected model with user confirmation, caches model artifacts where supported by the browser, and streams generated tokens locally.
 
-## Environment variables
+## WebGPU requirements
 
-Create `.env.local` for local development. Never commit real secrets.
+A browser with WebGPU support is required for model inference. Current Chromium-based desktop browsers generally provide the best experience. Some mobile browsers/devices may not expose enough WebGPU capability or memory for these models.
 
-```bash
-AI_API_KEY=your_secret_provider_key
-AI_PROVIDER=openai
-AI_MODEL=gpt-4o-mini
-```
+The app detects `navigator.gpu` on first load and blocks model loading with a clear compatibility message when WebGPU is unavailable.
 
-Supported provider values:
+## Supported local models
 
-- `openai`
-- `anthropic`
+| Model | Approximate requirement | Best for |
+| --- | --- | --- |
+| Qwen2.5 Coder 0.5B q4f16 | About 1 GB first download, around 945 MB VRAM | First run, broadest compatibility |
+| Qwen2.5 Coder 1.5B q4f16 | About 2 GB first download, roughly 1.7–2.0 GB VRAM | Better coding quality on stronger devices |
+| Qwen2.5 Coder 3B q4f16 | About 3–4 GB first download, roughly 2.8–3.5 GB VRAM | Desktop-class WebGPU devices |
 
-See `.env.example` for placeholder values.
+The model identifiers are configured in `src/local-webllm.js` and use MLC/WebLLM model builds intended for browser inference.
+
+## First-run setup
+
+1. Open the deployed website.
+2. Confirm WebGPU status is available.
+3. Select a model.
+4. Click **Download / Load model**.
+5. Review the approximate download and memory requirements.
+6. Confirm the download.
+7. Wait for progress to reach 100%.
+8. Start chatting.
+
+The app does not automatically download a large model.
+
+## Local caching
+
+WebLLM uses browser cache/storage backends where available. After a model is downloaded and cached, later visits can often reload without downloading all model artifacts again. Offline behavior depends on browser cache retention and whether the WebLLM runtime and model artifacts are already cached by the browser.
+
+Use **Clear local cache** to request cache deletion for this site where the browser permits it. The browser may manage storage eviction independently.
+
+## Privacy
+
+Normal chat prompts and generated code are processed by the local model in the user's browser. The app does not collect prompts, add analytics, or send chat content to a remote model provider. The first model download still retrieves model/runtime assets from public hosting/CDN sources.
 
 ## Local development
 
+Developer tooling requires Node.js, but end users only need to open the deployed website in a compatible browser.
+
 ```bash
 npm install
-cp .env.example .env.local
-# Edit .env.local and set AI_API_KEY.
 npm run dev
 ```
 
-Then open the local Vercel URL printed in the terminal, usually `http://localhost:3000`.
+Then open `http://localhost:5173`.
 
 ## Vercel deployment
 
 1. Push this repository to GitHub.
-2. Open Vercel and import the GitHub repository.
-3. In Vercel Project Settings → Environment Variables, add:
-   - `AI_API_KEY`
-   - `AI_PROVIDER`
-   - `AI_MODEL`
-4. Deploy.
-5. Open the Vercel deployment URL and start chatting.
+2. Import the repository into Vercel.
+3. Deploy as a static frontend.
+4. Do not configure AI provider keys; none are required for normal chat.
+5. Open the deployment URL in a WebGPU-capable browser.
 
-## Security considerations
+## Security notes
 
-- API keys are read only inside the server-side API route.
-- No secret values are placed in HTML, client JavaScript, or public environment variables.
-- `.env` and `.env.local` files are ignored by Git.
-- The API validates message roles and content.
-- Request body size, message count, and individual message length are limited.
-- Provider/internal errors are converted to safe public messages.
-
-For a public production launch, add user authentication, stronger rate limiting, abuse monitoring, and billing controls based on your provider costs. This app does not bypass provider limits and should not claim unlimited AI usage unless your backend arrangement truly supports it.
+- No AI provider secret is needed or exposed.
+- No hidden tracking, credential collection, background mining, or unauthorized device access is implemented.
+- Local inference runs only after the user explicitly loads a model and sends a chat request.
+- Cross-origin isolation headers are configured to support high-performance browser ML runtimes.
 
 ## Project structure
 
-See `docs/PROJECT_STRUCTURE.md` for the full file map and extension points.
+See `docs/PROJECT_STRUCTURE.md` for the file map and extension points.
